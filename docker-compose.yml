@@ -1,0 +1,23 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: laravelProject_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: laravelProject
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+    volumes:
+      - laravelProject_db_data:/var/lib/postgresql/data
+    networks:
+      - laravelProject_network
+
+networks:
+  laravelProject_network:
+    driver: bridge
+
+volumes:
+  laravelProject_db_data:
+    driver: local
