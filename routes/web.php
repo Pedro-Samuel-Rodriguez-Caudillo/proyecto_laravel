@@ -11,7 +11,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/Holiss', \App\Http\Controllers\ctlProduct::class)
+#Route::get('/Holiss', \App\Http\Controllers\ctlProduct::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
