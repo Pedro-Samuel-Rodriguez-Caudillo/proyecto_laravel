@@ -4,10 +4,10 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-# Etapa 2: Entorno de PHP con Apache
-FROM php:8.3-apache
+# Etapa 2: Entorno de PHP 8.4 con Apache (Actualizado para cumplir requisitos)
+FROM php:8.4-apache
 
-# Instalar dependencias del sistema y extensiones de PHP (Añadido soporte Postgres)
+# Instalar dependencias del sistema y extensiones de PHP
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
