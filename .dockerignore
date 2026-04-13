@@ -1,0 +1,15 @@
+/node_modules
+/vendor
+.env
+.git
+.gitignore
+docker-compose.yml
+Dockerfile
+.dockerignore
+/storage/*.key
+/public/storage
+/public/build
+/tests
+phpunit.xml
+.idea
+.vscode
