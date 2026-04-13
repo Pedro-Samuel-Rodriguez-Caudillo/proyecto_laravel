@@ -13,6 +13,8 @@ class ctlProduct extends Controller
     public function index()
     {
         //
+        $product = Product::all();
+        return view('product', compact('product'));
     }
 
     /**

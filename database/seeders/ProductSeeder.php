@@ -15,22 +15,12 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = Category::all();
-        if ($categories->isEmpty()) {
-            $categories = Category::factory(10)->create();
+        $categories = Category::factory(7)->create();
+
+        foreach ($categories as $category) {
+            $products = Product::factory(30)->create();
+            $category->products()->attach($products->pluck('id'));
         }
-
-        Product::factory(100)
-            ->hasAttached($categories->random(3))
-            ->create();
-
-
-        Product::factory()
-            ->hasAttached($categories->random(2))
-            ->create([
-                'Name' => 'Holis',
-                'Description' => 'Muy buen producto',
-            ]);
     }
     /*
         Schema::create('categories', function (Blueprint $table) {
