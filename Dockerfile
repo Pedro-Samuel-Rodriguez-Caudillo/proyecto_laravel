@@ -7,7 +7,7 @@ RUN npm install && npm run build
 # Etapa 2: Entorno de PHP con Apache
 FROM php:8.3-apache
 
-# Instalar dependencias del sistema y extensiones de PHP
+# Instalar dependencias del sistema y extensiones de PHP (Añadido soporte Postgres)
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
@@ -18,7 +18,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libzip-dev \
     libsqlite3-dev \
-    && docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
+    libpq-dev \
+    && docker-php-ext-install pdo_mysql pdo_sqlite pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
 
 # Habilitar mod_rewrite de Apache para Laravel
 RUN a2enmod rewrite
@@ -44,13 +45,10 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Crear archivo SQLite si no existe y dar permisos
-RUN touch database/database.sqlite && chmod 666 database/database.sqlite
-
 # Configurar permisos de storage y cache
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Exponer el puerto (Render lo sobreescribe, pero es buena práctica)
+# Exponer el puerto
 EXPOSE 80
 
 # Iniciar Apache
