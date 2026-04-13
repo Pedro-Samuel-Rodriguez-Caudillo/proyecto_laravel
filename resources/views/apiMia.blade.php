@@ -10,8 +10,10 @@
     <div style="border:1px solid #1f2937">
         <h2> titulo: {{ $dato['title'] }}
         </h2>
+        <div>
+        <button>mosttrar</button>
 
-        <p>{{$dato['body']}}}</p>
+        </div>
 
     </div>
 
