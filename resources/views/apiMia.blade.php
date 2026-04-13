@@ -11,10 +11,11 @@
         <h2> titulo: {{ $dato['title'] }}
         </h2>
         <div>
-        <button>mosttrar</button>
+
 
         </div>
 
     </div>
 
 @endforeach
+
