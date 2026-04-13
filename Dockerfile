@@ -2,6 +2,7 @@
 FROM node:20-alpine AS build-stage
 WORKDIR /app
 COPY . .
+# Asegurarnos de que Vite compile para producción
 RUN npm install && npm run build
 
 # Etapa 2: Entorno de PHP 8.4 con Apache
@@ -37,7 +38,7 @@ RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf && \
 WORKDIR /var/www/html
 COPY . .
 
-# Copiar los assets compilados desde la primera etapa
+# Copiar los assets compilados desde la primera etapa (Asegurando la ruta)
 COPY --from=build-stage /app/public/build ./public/build
 
 # Instalar Composer y dependencias de PHP
@@ -45,12 +46,8 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader
 
-# Configurar permisos de storage y cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Configurar permisos finales para TODO el proyecto (Esto arregla los assets)
+RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html/storage
 
-# Exponer el puerto
-EXPOSE 80
-
-# Comando para ejecutar migraciones y arrancar Apache
-# El flag --force es obligatorio en producción
-CMD php artisan migrate --force && apache2-foreground
+# Comando para ejecutar migraciones, crear link de storage y arrancar Apache
+CMD php artisan migrate --force && php artisan storage:link && apache2-foreground
