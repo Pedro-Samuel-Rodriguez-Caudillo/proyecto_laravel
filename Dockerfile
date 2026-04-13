@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 RUN npm install && npm run build
 
-# Etapa 2: Entorno de PHP 8.4 con Apache (Actualizado para cumplir requisitos)
+# Etapa 2: Entorno de PHP 8.4 con Apache
 FROM php:8.4-apache
 
 # Instalar dependencias del sistema y extensiones de PHP
@@ -51,5 +51,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Exponer el puerto
 EXPOSE 80
 
-# Iniciar Apache
-CMD ["apache2-foreground"]
+# Comando para ejecutar migraciones y arrancar Apache
+# El flag --force es obligatorio en producción
+CMD php artisan migrate --force && apache2-foreground
