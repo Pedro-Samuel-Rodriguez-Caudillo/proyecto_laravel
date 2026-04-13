@@ -1,0 +1,7 @@
+{
+    "proyecto": "Laravel en Render",
+    "autor": "Pedro Samuel Rodriguez Caudillo",
+    "estado": "Activo",
+    "tecnologias": ["PHP", "Laravel", "Docker"],
+    "mensaje": "Este es un JSON de prueba servido desde el servidor público."
+}
