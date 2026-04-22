@@ -1,3 +1,5 @@
+@vite(['resources/js/app.js'])
+
 <style>
     div {
         padding: 20px;
@@ -13,16 +15,14 @@
             {{ $dato['Name'] ?? 'No lo encontré' }}
             <button
                 type="button"
-                onclick="saludar('{{ addslashes($dato['Description'] ?? 'Sin descripción') }}')"
+                onclick="saludar('{{ addslashes($dato['Name'] ?? 'Sin nombre') }}','{{ addslashes($dato['Description'] ?? 'Sin descripción') }}')"
                 class="btn btn-success">
                 Ver descripción
             </button>
+            <a href="{{ route('tj.detalle', $dato['Name']) }}">
+                Ir a detalles
+            </a>
         </li>
     </div>
 @endforeach
 
-<script>
-    function saludar(descripcion) {
-        alert("Descripción: " + descripcion);
-    }
-</script>

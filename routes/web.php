@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ctlProduct;
+use App\Http\Controllers\ctlCategory;
 use App\Http\Controllers\ctlDatos;
 use App\Http\Controllers\ctlApiMia;
 use App\Http\Controllers\ctlConsumirExterno;
@@ -15,7 +16,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/product', [ctlProduct::class, 'index']);
+Route::resource('/products', ctlProduct::class);
+Route::resource('/categories', ctlCategory::class);
+
 Route::get('/datoslink', [ctlDatos::class, 'index']);
 Route::get('/apiMia', [ctlApiMia::class, 'index']);
 Route::get('/consumir-externo', [ctlConsumirExterno::class, 'index']);
@@ -38,6 +41,9 @@ Route::get('/apiDatos', function () {
         'timestamp' => now()
     ]);
 });
+
+//Vista de detalle de registros.
+Route::get('/detalleApi/{n1}', [ctlDatos::class, 'detalle'])->name('tj.detalle');
 
 #Route::get('/Holiss', \App\Http\Controllers\ctlProduct::class);
 

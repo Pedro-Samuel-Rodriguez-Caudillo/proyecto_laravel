@@ -11,7 +11,7 @@ class Product extends Model
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     //
-    public $fillable = [
+    protected $fillable = [
         'Name',
         'Description',
         'DescriptionLong',
