@@ -20,7 +20,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libsqlite3-dev \
     libpq-dev \
-    && docker-php-ext-install pdo_mysql pdo_sqlite pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip
+    libicu-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install pdo_mysql pdo_sqlite pdo_pgsql pgsql mbstring exif pcntl bcmath gd zip intl
 
 # Habilitar mod_rewrite de Apache para Laravel
 RUN a2enmod rewrite
@@ -44,7 +46,7 @@ COPY --from=build-stage /app/public/build ./public/build
 # Instalar Composer y dependencias de PHP
 ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
 # Configurar permisos finales para TODO el proyecto (Esto arregla los assets)
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html/storage
