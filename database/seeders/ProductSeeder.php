@@ -4,8 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ProductSeeder extends Seeder
@@ -17,26 +15,10 @@ class ProductSeeder extends Seeder
     {
         $categories = Category::factory(7)->create();
 
-        foreach ($categories as $category) {
-            $products = Product::factory(30)->create();
-            $category->products()->attach($products->pluck('id'));
-        }
+        Product::factory(30)->create()->each(function (Product $product) use ($categories): void {
+            $product->categories()->attach(
+                $categories->random(rand(1, min(3, $categories->count())))->pluck('id')->all()
+            );
+        });
     }
-    /*
-        Schema::create('categories', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->timestamps();
-    }*/
-
-    /*
-     *         // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
-    }
-     */
 }

@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -13,10 +12,19 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        Category::factory()->made([
-            'name'=> 'Insana',
-            'description'=> 'Muy Insana'
+        Category::factory()->createMany([
+            [
+                'name' => 'Electronica',
+                'description' => 'Dispositivos y accesorios',
+            ],
+            [
+                'name' => 'Hogar',
+                'description' => 'Articulos para casa',
+            ],
+            [
+                'name' => 'Oficina',
+                'description' => 'Material y equipo de trabajo',
+            ],
         ]);
     }
 }

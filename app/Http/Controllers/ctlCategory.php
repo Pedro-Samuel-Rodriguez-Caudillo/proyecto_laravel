@@ -15,7 +15,9 @@ class ctlCategory extends Controller
 
     public function create()
     {
-        return view('categories');
+        $categories = Category::all();
+
+        return view('categories', compact('categories'));
     }
 
     public function store(Request $request)
@@ -32,6 +34,7 @@ class ctlCategory extends Controller
     public function edit(Category $category)
     {
         $categories = Category::all();
+
         return view('categories', compact('categories', 'category'));
     }
 

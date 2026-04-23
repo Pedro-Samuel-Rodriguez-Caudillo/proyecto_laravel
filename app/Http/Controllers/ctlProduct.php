@@ -18,7 +18,9 @@ class ctlProduct extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('products', compact('categories'));
+        $products = Product::with('categories')->get();
+
+        return view('products', compact('categories', 'products'));
     }
 
     public function store(Request $request)
@@ -39,6 +41,7 @@ class ctlProduct extends Controller
     {
         $products = Product::with('categories')->get();
         $categories = Category::all();
+
         return view('products', compact('product', 'products', 'categories'));
     }
 
