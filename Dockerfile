@@ -51,5 +51,5 @@ RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interactio
 # Configurar permisos finales para TODO el proyecto (Esto arregla los assets)
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html/storage
 
-# Comando para ejecutar migraciones, crear link de storage y arrancar Apache
-CMD php artisan migrate --force && php artisan storage:link && apache2-foreground
+# Comando para limpiar caché, ejecutar migraciones, crear link de storage y arrancar Apache
+CMD php artisan config:clear && php artisan route:clear && php artisan migrate --force && php artisan storage:link && apache2-foreground
