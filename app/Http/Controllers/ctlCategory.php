@@ -7,17 +7,17 @@ use Illuminate\Http\Request;
 
 class ctlCategory extends Controller
 {
-    /**
-     * Listar todas las categorías.
-     */
     public function index()
     {
-        return response()->json(Category::all(), 200);
+        $categories = Category::all();
+        return view('categories', compact('categories'));
     }
 
-    /**
-     * Crear una nueva categoría.
-     */
+    public function create()
+    {
+        return view('categories');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -25,24 +25,16 @@ class ctlCategory extends Controller
             'description' => 'nullable|max:255',
         ]);
 
-        $category = Category::create($validated);
-        return response()->json([
-            'message' => 'Categoría creada con éxito',
-            'data' => $category
-        ], 201);
+        Category::create($validated);
+        return redirect()->route('categories.index')->with('success', 'Categoría creada');
     }
 
-    /**
-     * Consultar una categoría por ID.
-     */
-    public function show(Category $category)
+    public function edit(Category $category)
     {
-        return response()->json($category, 200);
+        $categories = Category::all();
+        return view('categories', compact('categories', 'category'));
     }
 
-    /**
-     * Actualizar una categoría.
-     */
     public function update(Request $request, Category $category)
     {
         $validated = $request->validate([
@@ -51,20 +43,12 @@ class ctlCategory extends Controller
         ]);
 
         $category->update($validated);
-        return response()->json([
-            'message' => 'Categoría actualizada con éxito',
-            'data' => $category
-        ], 200);
+        return redirect()->route('categories.index')->with('success', 'Categoría actualizada');
     }
 
-    /**
-     * Eliminar una categoría.
-     */
     public function destroy(Category $category)
     {
         $category->delete();
-        return response()->json([
-            'message' => 'Categoría eliminada con éxito'
-        ], 200);
+        return redirect()->route('categories.index')->with('success', 'Categoría eliminada con éxito');
     }
 }

@@ -8,18 +8,19 @@ use Illuminate\Http\Request;
 
 class ctlProduct extends Controller
 {
-    /**
-     * Listar todos los productos con sus categorías.
-     */
     public function index()
     {
         $products = Product::with('categories')->get();
-        return response()->json($products, 200);
+        $categories = Category::all();
+        return view('products', compact('products', 'categories'));
     }
 
-    /**
-     * Crear un nuevo producto.
-     */
+    public function create()
+    {
+        $categories = Category::all();
+        return view('products', compact('categories'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -31,23 +32,16 @@ class ctlProduct extends Controller
         $product = Product::create($request->only(['Name', 'Description', 'DescriptionLong', 'Price']));
         $product->categories()->attach($request->category_id);
 
-        return response()->json([
-            'message' => 'Producto creado con éxito',
-            'data' => $product->load('categories')
-        ], 201);
+        return redirect()->route('products.index')->with('success', 'Producto creado');
     }
 
-    /**
-     * Consultar un producto por ID.
-     */
-    public function show(Product $product)
+    public function edit(Product $product)
     {
-        return response()->json($product->load('categories'), 200);
+        $products = Product::with('categories')->get();
+        $categories = Category::all();
+        return view('products', compact('product', 'products', 'categories'));
     }
 
-    /**
-     * Actualizar un producto.
-     */
     public function update(Request $request, Product $product)
     {
         $request->validate([
@@ -59,20 +53,12 @@ class ctlProduct extends Controller
         $product->update($request->only(['Name', 'Description', 'DescriptionLong', 'Price']));
         $product->categories()->sync([$request->category_id]);
 
-        return response()->json([
-            'message' => 'Producto actualizado con éxito',
-            'data' => $product->load('categories')
-        ], 200);
+        return redirect()->route('products.index')->with('success', 'Producto actualizado');
     }
 
-    /**
-     * Eliminar un producto.
-     */
     public function destroy(Product $product)
     {
         $product->delete();
-        return response()->json([
-            'message' => 'Producto eliminado con éxito'
-        ], 200);
+        return redirect()->route('products.index')->with('success', 'Producto eliminado con éxito');
     }
 }
