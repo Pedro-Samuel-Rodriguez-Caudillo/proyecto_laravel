@@ -40,6 +40,9 @@ RUN sed -i 's/Listen 80/Listen ${PORT}/g' /etc/apache2/ports.conf && \
 WORKDIR /var/www/html
 COPY . .
 
+# Eliminar public/hot si existe por error (esto rompe los assets en producción)
+RUN rm -f public/hot
+
 # Copiar los assets compilados desde la primera etapa (Asegurando la ruta)
 COPY --from=build-stage /app/public/build ./public/build
 
@@ -48,8 +51,14 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN composer install --no-dev --optimize-autoloader --no-scripts --no-interaction
 
-# Configurar permisos finales para TODO el proyecto (Esto arregla los assets)
-RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html/storage
+# Optimizar el autoloader de nuevo después de copiar todo y asegurar permisos
+RUN composer dump-autoload --optimize --no-dev
+
+# Configurar permisos finales para TODO el proyecto
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html/storage && \
+    chmod -R 755 /var/www/html/bootstrap/cache && \
+    chmod -R 755 /var/www/html/public
 
 # Comando para limpiar caché, ejecutar migraciones, crear link de storage y arrancar Apache
-CMD php artisan config:clear && php artisan route:clear && php artisan migrate --force && php artisan storage:link && apache2-foreground
+CMD php artisan config:clear && php artisan route:clear && php artisan view:clear && php artisan migrate --force && php artisan storage:link && apache2-foreground
